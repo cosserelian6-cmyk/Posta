@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#160d20">
+<meta name="description" content="PISTA — tu música, tu ritmo.">
+<link rel="manifest" href="manifest.webmanifest">
+<title>PISTA</title>
+<style>
+:root{--bg:#160d20;--panel:#24152f;--panel2:#30203d;--purple:#bd7aff;--pink:#edb6ff;--muted:#b9a9c5;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#39204c 0,#160d20 52%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;padding-bottom:112px}
+header{padding:26px 20px 16px;display:flex;justify-content:space-between;align-items:center;max-width:760px;margin:auto}
+.logo{font-size:30px;font-weight:900;letter-spacing:3px;color:var(--pink)}.tag{color:var(--muted);font-size:12px}
+main{max-width:760px;margin:auto;padding:0 16px}.hero{padding:22px;border-radius:24px;background:linear-gradient(135deg,#60327b,#2c1b3b 65%,#20142a);box-shadow:0 14px 40px #0005;margin:8px 0 24px}
+.hero small{color:#f0d8ff;letter-spacing:2px;font-weight:700}.hero h1{font-size:30px;line-height:1.1;margin:10px 0}.hero p{color:#e0cce9;margin:0}
+.search{display:flex;gap:8px;margin:14px 0 22px}.search input{flex:1;min-width:0;background:#281a32;border:1px solid #694a7c;color:white;border-radius:14px;padding:14px;font-size:16px;outline:none}.search button,.urlrow button{background:var(--purple);color:#1a1022;border:0;border-radius:14px;padding:0 17px;font-weight:800}
+h2{font-size:18px;margin:20px 2px 12px}.hint{font-size:12px;color:var(--muted);line-height:1.5}
+#results{display:grid;gap:10px}.track{display:flex;align-items:center;gap:12px;background:#24182e;border:1px solid #493256;padding:10px;border-radius:16px}.track img{width:58px;height:58px;border-radius:10px;object-fit:cover;background:#392548}.meta{min-width:0;flex:1}.meta b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}.meta span{display:block;color:var(--muted);font-size:12px;margin-top:4px}.track button{border:0;background:#4a2c5d;color:white;border-radius:50%;width:42px;height:42px;font-size:18px}
+.urlbox{background:#21152a;border:1px solid #493256;padding:15px;border-radius:18px;margin-top:22px}.urlrow{display:flex;gap:8px;margin-top:10px}.urlrow input{flex:1;min-width:0;background:#130c19;border:1px solid #5a4268;color:white;padding:12px;border-radius:12px}
+.player{position:fixed;bottom:0;left:0;right:0;background:#21152af2;backdrop-filter:blur(16px);border-top:1px solid #593e69;padding:12px max(16px,calc((100vw - 728px)/2));z-index:5}.now{display:flex;align-items:center;gap:10px}.now img{width:44px;height:44px;border-radius:9px;object-fit:cover;background:#382345}.now .meta b{font-size:13px}.controls{display:flex;align-items:center;justify-content:center;gap:24px;margin-top:8px}.controls button{background:none;border:0;color:white;font-size:23px}.controls .main{background:var(--purple);color:#1a1022;width:42px;height:42px;border-radius:50%;font-size:18px;font-weight:900}
+progress{width:100%;height:4px;accent-color:var(--purple);margin-top:9px}
+footer{text-align:center;color:#887995;font-size:11px;padding:20px}
+button{cursor:pointer}
+</style>
+</head>
+<body>
+<header><div><div class="logo">PISTA<span style="color:white">.</span></div><div class="tag">TU MÚSICA · TU RITMO</div></div><div aria-hidden="true" style="font-size:25px">♫</div></header>
+<main>
+<section class="hero"><small>BIENVENIDO A TU ESPACIO</small><h1>Encontrá tu próximo ritmo.</h1><p>Buscá música y escuchá avances directamente desde PISTA.</p></section>
+<form class="search" id="searchForm"><input id="query" placeholder="Buscar artista o canción…" autocomplete="off"><button>Buscar</button></form>
+<h2>Resultados</h2><div id="status" class="hint">Buscá una canción para empezar. Los resultados son avances oficiales disponibles en iTunes.</div>
+<div id="results"></div>
+<section class="urlbox"><b>¿Tenés un enlace de audio?</b><p class="hint">También podés pegar una URL directa de una transmisión o archivo de audio que tengas permiso para reproducir.</p><div class="urlrow"><input id="audioUrl" type="url" placeholder="https://…"><button id="playUrl">Abrir</button></div></section>
+<p class="hint">PISTA es un proyecto independiente. Los avances musicales se sirven desde iTunes; la disponibilidad depende del país y del catálogo.</p>
+</main>
+<footer>PISTA · Proyecto independiente</footer>
+<div class="player">
+ <div class="now"><img id="cover" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='100%25' height='100%25' fill='%23432b55'/%3E%3Ctext x='50%25' y='58%25' font-size='35' text-anchor='middle' fill='white'%3E♫%3C/text%3E%3C/svg%3E"><div class="meta"><b id="trackTitle">Todavía no suena nada</b><span id="artist">Elegí una canción</span></div></div>
+ <progress id="progress" value="0" max="100"></progress>
+ <div class="controls"><button id="back" aria-label="Volver al inicio">↺</button><button class="main" id="toggle" aria-label="Reproducir">▶</button><button id="stop" aria-label="Detener">■</button></div>
+</div>
+<audio id="audio" preload="none"></audio>
+<script>
+const audio=document.getElementById('audio'), results=document.getElementById('results');
+let current=null;
+const fallback='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80"%3E%3Crect width="100%25" height="100%25" fill="%23432b55"/%3E%3Ctext x="50%25" y="58%25" font-size="35" text-anchor="middle" fill="white"%3E♫%3C/text%3E%3C/svg%3E';
+function setTrack(t){current=t;audio.src=t.url;document.getElementById('cover').src=t.art||fallback;document.getElementById('trackTitle').textContent=t.title;document.getElementById('artist').textContent=t.artist;audio.play().then(updateButton).catch(()=>{document.getElementById('status').textContent='No se pudo reproducir este audio. Probá otro resultado.'});}
+function updateButton(){document.getElementById('toggle').textContent=audio.paused?'▶':'Ⅱ'}
+function addTrack(t){const el=document.createElement('div');el.className='track';const img=document.createElement('img');img.src=t.art||fallback;img.alt='';const meta=document.createElement('div');meta.className='meta';const b=document.createElement('b');b.textContent=t.title;const s=document.createElement('span');s.textContent=t.artist;meta.append(b,s);const btn=document.createElement('button');btn.textContent='▶';btn.setAttribute('aria-label','Reproducir '+t.title);btn.onclick=()=>setTrack(t);el.append(img,meta,btn);results.append(el)}
+document.getElementById('searchForm').addEventListener('submit',async e=>{e.preventDefault();const q=document.getElementById('query').value.trim();if(!q)return;results.replaceChildren();const status=document.getElementById('status');status.textContent='Buscando…';try{const r=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&limit=20&country=AR');if(!r.ok)throw Error();const data=await r.json();if(!data.results.length){status.textContent='No encontramos resultados. Probá con otro nombre.';return}status.textContent='Avances disponibles ('+data.results.length+'). Tocá ▶ para escuchar.';data.results.forEach(x=>{if(x.previewUrl)addTrack({title:x.trackName,artist:x.artistName,url:x.previewUrl,art:x.artworkUrl100?.replace('100x100','300x300')})})}catch(err){status.textContent='No se pudo conectar. Revisá Internet e intentá otra vez.'}});
+document.getElementById('playUrl').onclick=()=>{const url=document.getElementById('audioUrl').value.trim();if(!/^https?:\/\//i.test(url)){alert('Pegá una dirección web válida.');return}setTrack({title:'Audio online',artist:'Enlace externo',url,art:fallback})};
+document.getElementById('toggle').onclick=()=>{if(!audio.src)return;if(audio.paused)audio.play();else audio.pause();updateButton()};
+document.getElementById('stop').onclick=()=>{audio.pause();audio.currentTime=0;updateButton()};
+document.getElementById('back').onclick=()=>{audio.currentTime=0};
+audio.addEventListener('play',updateButton);audio.addEventListener('pause',updateButton);
+audio.addEventListener('timeupdate',()=>{document.getElementById('progress').value=audio.duration?audio.currentTime/audio.duration*100:0});
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body></html>
